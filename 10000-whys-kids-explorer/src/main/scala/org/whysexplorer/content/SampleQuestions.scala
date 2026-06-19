@@ -152,3 +152,23 @@ object SampleQuestions {
 
   val all: List[Question] = animals ++ space
 }
+
+/** Aggregates every seed question across all 9 categories. */
+object AllQuestions {
+
+  val all: List[Question] =
+    SampleQuestions.animals ++
+    AnimalsQuestions.all ++
+    SampleQuestions.space ++
+    SpaceQuestions.all ++
+    HumanBodyQuestions.all ++
+    EarthNatureQuestions.all ++
+    EverydayScienceQuestions.all ++
+    RemainingCategoryQuestions.all
+
+  def byCategory(categoryId: String): List[Question] =
+    all.filter(_.categoryId == categoryId)
+
+  val stats: Map[String, Int] =
+    all.groupBy(_.categoryId).map { case (k, v) => k -> v.size }
+}

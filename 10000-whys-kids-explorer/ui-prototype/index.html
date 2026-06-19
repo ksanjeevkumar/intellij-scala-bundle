@@ -4,61 +4,72 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>10,000 Whys – Kids Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
-/* ── DESIGN TOKENS ───────────────────────────────────────── */
+/* ── GOOGLE FONTS FALLBACK (loaded inline to avoid network dep) ── */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nunito:wght@400;700;800;900&display=swap');
+
+/* ── DESIGN TOKENS — book-inspired palette ───────────────── */
 :root {
-  --sky:       #6C63FF;
-  --sky-light: #EEF0FF;
-  --sun:       #FFB703;
-  --leaf:      #06D6A0;
-  --coral:     #FF6B6B;
-  --peach:     #FFD6A5;
-  --bg:        #F8F9FF;
-  --card:      #FFFFFF;
-  --text:      #1A1A2E;
-  --muted:     #8B8FA8;
-  --radius:    20px;
-  --radius-sm: 12px;
-  --shadow:    0 4px 20px rgba(108,99,255,.15);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,.08);
-  --transition: .3s cubic-bezier(.34,1.56,.64,1);
+  --cream:      #FDFAF3;
+  --page:       #FFF8EA;
+  --navy:       #1B2045;
+  --navy2:      #252A5A;
+  --orange:     #F4821A;
+  --orange-lt:  #FFF0DC;
+  --gold:       #F5C518;
+  --gold-lt:    #FFFAE6;
+  --green-hl:   #D6F5E6;
+  --green-dark: #1A7A4A;
+  --yellow-hl:  #FFF3B0;
+  --yellow-dark:#8A6800;
+  --text:       #1A1A2E;
+  --muted:      #7A7A8A;
+  --red:        #E03A3A;
+  --teal:       #00B09B;
+  --radius:     18px;
+  --radius-sm:  10px;
+  --shadow:     0 4px 24px rgba(0,0,0,.12);
+  --shadow-sm:  0 2px 10px rgba(0,0,0,.07);
+  --font-body:  'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --font-why:   'Caveat', cursive;
 }
 
 /* ── RESET ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #E8E9F3;
+  font-family: var(--font-body);
+  background: #2C2C4A;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 20px;
+  padding: 24px 16px;
+  background-image: radial-gradient(circle at 20% 30%, #3A3A6A 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, #1A1A3A 0%, transparent 50%);
 }
 
 /* ── PHONE SHELL ─────────────────────────────────────────── */
 #phone {
   width: 390px;
   min-height: 844px;
-  background: var(--bg);
+  background: var(--page);
   border-radius: 44px;
   overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0,0,0,.35), 0 0 0 12px #1A1A2E;
+  box-shadow: 0 40px 100px rgba(0,0,0,.5), 0 0 0 12px #111;
   position: relative;
   display: flex;
   flex-direction: column;
 }
-
-/* notch */
 #phone::before {
   content: '';
   display: block;
   width: 120px; height: 30px;
-  background: #1A1A2E;
+  background: #111;
   border-radius: 0 0 20px 20px;
   margin: 0 auto;
-  position: relative;
-  z-index: 100;
+  position: relative; z-index: 100;
+  flex-shrink: 0;
 }
 
 /* ── SCREENS ─────────────────────────────────────────────── */
@@ -69,1152 +80,1205 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 80px;
-  animation: slideIn .35s var(--transition);
+  background: var(--page);
+  animation: pgIn .3s ease;
 }
 .screen.active { display: flex; }
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(30px); }
+@keyframes pgIn {
+  from { opacity: 0; transform: translateX(18px); }
   to   { opacity: 1; transform: translateX(0); }
 }
+.screen::-webkit-scrollbar { width: 3px; }
+.screen::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
 
-/* scrollbar */
-.screen::-webkit-scrollbar { width: 4px; }
-.screen::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 2px; }
+/* ── PAGE LINES (lined notebook background) ──────────────── */
+.lined {
+  background-image: repeating-linear-gradient(
+    transparent, transparent 31px, #E8DFC8 31px, #E8DFC8 32px
+  );
+  background-attachment: local;
+}
 
 /* ── BOTTOM NAV ──────────────────────────────────────────── */
 #nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 76px;
-  background: var(--card);
-  border-top: 1px solid #EAECF4;
+  background: var(--navy);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 10px 8px;
+  padding: 0 8px 8px;
   z-index: 50;
-  box-shadow: 0 -4px 20px rgba(0,0,0,.06);
+  border-top: 3px solid var(--orange);
 }
 .nav-btn {
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   background: none; border: none; cursor: pointer;
-  font-size: 10px; font-weight: 600; color: var(--muted);
+  font-size: 10px; font-weight: 800; color: rgba(255,255,255,.45);
   transition: color .2s;
-  padding: 6px 14px; border-radius: 14px;
+  padding: 6px 12px; border-radius: 12px;
+  font-family: var(--font-body);
 }
-.nav-btn .icon { font-size: 22px; line-height: 1; }
-.nav-btn.active { color: var(--sky); background: var(--sky-light); }
+.nav-btn .icon { font-size: 20px; line-height: 1; }
+.nav-btn.active { color: var(--gold); }
+.nav-btn.active .icon { filter: drop-shadow(0 0 6px rgba(245,197,24,.6)); }
 
-/* ── HEADER ──────────────────────────────────────────────── */
-.header {
-  padding: 16px 20px 12px;
-  display: flex; align-items: center; justify-content: space-between;
+/* ── DECORATION HELPERS ──────────────────────────────────── */
+.star-divider {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 20px; margin: 4px 0 10px;
+  color: var(--gold);
+  font-size: 12px;
 }
-.header h1 { font-size: 22px; font-weight: 800; color: var(--text); }
-.header .subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.avatar-bubble {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--sky), #9B8FFF);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; box-shadow: var(--shadow-sm);
-  cursor: pointer;
+.star-divider::before, .star-divider::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 12px);
 }
 
-/* ── SEARCH BAR ──────────────────────────────────────────── */
+.q-mark {
+  display: inline-block;
+  font-size: 1.4em;
+  color: var(--orange);
+  font-family: serif;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* ── BOOK COVER (Home hero) ──────────────────────────────── */
+.cover-hero {
+  background: linear-gradient(160deg, var(--navy) 0%, #151935 100%);
+  padding: 20px 20px 0;
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+}
+.cover-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 50%, rgba(245,197,24,.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+/* star field */
+.cover-hero .stars {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.cover-star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle 2s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { opacity: .3; } to { opacity: 1; } }
+
+.cover-title {
+  font-family: var(--font-why);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 3px 3px 0 rgba(0,0,0,.4), 0 0 30px rgba(245,197,24,.4);
+  line-height: 1;
+  position: relative; z-index: 2;
+}
+.cover-title span { color: #fff; }
+.cover-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  position: relative; z-index: 2;
+}
+.cover-mascots {
+  display: flex;
+  justify-content: flex-end;
+  position: relative; z-index: 2;
+  margin-top: -10px;
+}
+.cover-mascots .astronaut {
+  font-size: 80px;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-12px) rotate(3deg); }
+}
+.planet {
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* ── HOME SEARCH ─────────────────────────────────────────── */
 .search-wrap {
-  padding: 0 20px 14px;
+  padding: 14px 20px 0;
   position: relative;
 }
 .search-bar {
   width: 100%;
-  height: 48px;
-  border-radius: 16px;
-  border: 2px solid transparent;
-  background: var(--card);
-  padding: 0 16px 0 44px;
+  height: 50px;
+  border-radius: 25px;
+  border: 2.5px solid var(--orange);
+  background: var(--cream);
+  padding: 0 16px 0 46px;
   font-size: 15px; color: var(--text);
-  box-shadow: var(--shadow-sm);
+  font-family: var(--font-body);
+  font-weight: 700;
   outline: none;
-  transition: border-color .2s;
+  box-shadow: 3px 3px 0 rgba(244,130,26,.25);
 }
-.search-bar:focus { border-color: var(--sky); }
-.search-icon {
-  position: absolute; left: 36px; top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px; pointer-events: none;
-}
+.search-bar::placeholder { font-weight: 400; color: #B0A898; }
+.search-icon { position: absolute; left: 36px; top: 24px; font-size: 20px; }
 .suggest-dropdown {
-  position: absolute; left: 20px; right: 20px; top: 56px;
-  background: var(--card); border-radius: var(--radius-sm);
-  box-shadow: var(--shadow);
+  position: absolute; left: 20px; right: 20px; top: 72px;
+  background: var(--cream);
+  border: 2px solid var(--orange);
+  border-radius: var(--radius-sm);
+  box-shadow: 4px 4px 0 rgba(244,130,26,.2);
   display: none; z-index: 30; overflow: hidden;
 }
 .suggest-dropdown.open { display: block; }
 .suggest-item {
-  padding: 12px 16px; font-size: 14px; cursor: pointer;
-  border-bottom: 1px solid #F0F0F7;
-  color: var(--text);
-  transition: background .15s;
+  padding: 12px 16px; font-size: 14px; font-weight: 700;
+  cursor: pointer; border-bottom: 1px dashed #E8DFC8;
+  color: var(--text); transition: background .15s;
 }
-.suggest-item:hover { background: var(--sky-light); }
+.suggest-item:hover { background: var(--orange-lt); }
 .suggest-item:last-child { border-bottom: none; }
 
-/* ── DAILY CHALLENGE BANNER ──────────────────────────────── */
+/* ── DAILY BANNER ────────────────────────────────────────── */
 .daily-banner {
-  margin: 0 20px 18px;
-  background: linear-gradient(135deg, var(--sky) 0%, #9B8FFF 100%);
+  margin: 14px 20px;
+  background: var(--navy);
   border-radius: var(--radius);
-  padding: 18px 18px 18px 20px;
-  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 12px;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(108,99,255,.35);
-  transition: transform .2s;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.25);
+  border: 2.5px solid var(--gold);
+  transition: transform .15s;
 }
 .daily-banner:active { transform: scale(.98); }
-.daily-banner .emoji { font-size: 42px; flex-shrink: 0; }
-.daily-banner .label {
-  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.7);
-  text-transform: uppercase; letter-spacing: 1px;
+.daily-banner .db-icon { font-size: 40px; flex-shrink: 0; }
+.daily-banner .db-label {
+  font-size: 10px; font-weight: 800; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 1.5px;
 }
-.daily-banner .question {
-  font-size: 15px; font-weight: 700; color: #fff;
-  margin-top: 4px; line-height: 1.35;
+.daily-banner .db-q {
+  font-size: 14px; font-weight: 800; color: #fff; margin-top: 4px; line-height: 1.35;
 }
-.daily-banner .arrow {
-  margin-left: auto; font-size: 20px; color: rgba(255,255,255,.7); flex-shrink: 0;
+.daily-banner .why-badge {
+  font-family: var(--font-why);
+  font-size: 18px; color: var(--orange); margin-right: 2px;
 }
+.daily-banner .arrow { margin-left: auto; font-size: 22px; color: var(--gold); flex-shrink: 0; }
 
-/* ── SECTION TITLE ───────────────────────────────────────── */
-.section-title {
-  padding: 0 20px 10px;
+/* ── SECTION HEADER ──────────────────────────────────────── */
+.section-head {
+  padding: 10px 20px 4px;
   display: flex; align-items: center; justify-content: space-between;
 }
-.section-title h2 { font-size: 17px; font-weight: 800; color: var(--text); }
-.see-all { font-size: 13px; color: var(--sky); font-weight: 600; cursor: pointer; }
+.section-head h2 {
+  font-size: 16px; font-weight: 900; color: var(--navy);
+  display: flex; align-items: center; gap: 6px;
+}
+.section-head h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 18px;
+  background: var(--orange);
+  border-radius: 2px;
+}
+.see-all {
+  font-size: 12px; color: var(--orange); font-weight: 800; cursor: pointer;
+  border-bottom: 2px solid var(--orange);
+}
 
 /* ── CATEGORY GRID ───────────────────────────────────────── */
 .cat-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; padding: 0 20px 4px;
+  gap: 10px; padding: 8px 20px 4px;
 }
 .cat-card {
-  background: var(--card);
+  background: var(--cream);
   border-radius: var(--radius);
-  padding: 14px 10px;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  box-shadow: var(--shadow-sm);
+  padding: 12px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  box-shadow: 3px 3px 0 #DDD0B8;
   cursor: pointer;
-  transition: transform var(--transition), box-shadow .2s;
-  border: 2.5px solid transparent;
+  border: 2px solid #DDD0B8;
+  transition: transform .15s, box-shadow .15s;
 }
-.cat-card:active { transform: scale(.95); }
-.cat-card.selected { border-color: var(--sky); }
-.cat-card .mascot { font-size: 32px; line-height: 1; }
-.cat-card .cat-name {
-  font-size: 11px; font-weight: 700; color: var(--text);
-  text-align: center; line-height: 1.2;
-}
-.cat-card .cat-count { font-size: 10px; color: var(--muted); }
+.cat-card:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #DDD0B8; }
+.cat-card .mascot { font-size: 30px; line-height: 1; }
+.cat-card .cat-name { font-size: 10px; font-weight: 800; color: var(--navy); text-align: center; line-height: 1.2; }
+.cat-card .cat-count { font-size: 9px; color: var(--muted); }
+.cat-card.selected { border-color: var(--orange); box-shadow: 3px 3px 0 rgba(244,130,26,.3); }
 
-/* ── RECENT SCROLL ───────────────────────────────────────── */
+/* ── RECENT CHIPS ────────────────────────────────────────── */
 .recent-scroll {
-  display: flex; gap: 12px;
-  overflow-x: auto; padding: 0 20px 4px;
+  display: flex; gap: 10px;
+  overflow-x: auto; padding: 6px 20px 8px;
   scrollbar-width: none;
 }
 .recent-scroll::-webkit-scrollbar { display: none; }
 .recent-chip {
   flex-shrink: 0;
-  background: var(--card);
-  border-radius: 14px;
-  padding: 10px 14px;
-  font-size: 13px; font-weight: 600; color: var(--text);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
-  white-space: nowrap;
-  transition: background .2s;
+  background: var(--cream);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 12px; font-weight: 800; color: var(--navy);
+  box-shadow: 2px 2px 0 #DDD0B8;
+  border: 1.5px solid #DDD0B8;
+  cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
 }
-.recent-chip:hover { background: var(--sky-light); }
-.recent-chip .chip-emoji { font-size: 18px; }
+.recent-chip:active { transform: translate(1px,1px); }
 
-/* ── QA SCREEN ───────────────────────────────────────────── */
-.qa-header {
-  padding: 14px 20px;
-  display: flex; align-items: center; gap: 12px;
+/* ── Q&A PAGE LAYOUT ─────────────────────────────────────── */
+#screen-qa { background: var(--cream); }
+
+.qa-topbar {
+  padding: 12px 18px 8px;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--cream);
+  border-bottom: 2px dashed #DDD0B8;
 }
 .back-btn {
-  width: 38px; height: 38px; border-radius: 12px;
-  background: var(--card); border: none; cursor: pointer;
-  font-size: 18px; display: flex; align-items: center; justify-content: center;
-  box-shadow: var(--shadow-sm);
-}
-.qa-header .cat-tag {
-  font-size: 12px; font-weight: 700;
-  background: var(--sky-light); color: var(--sky);
-  padding: 4px 12px; border-radius: 20px;
-}
-.diff-tag {
-  margin-left: auto;
-  font-size: 11px; font-weight: 700;
-  padding: 4px 10px; border-radius: 20px;
-}
-.diff-tag.simple  { background: #E8F5E9; color: #2E7D32; }
-.diff-tag.medium  { background: #FFF3E0; color: #E65100; }
-.diff-tag.advanced{ background: #FCE4EC; color: #C62828; }
-
-/* QA illustration card */
-.qa-illus-card {
-  margin: 0 20px 16px;
-  border-radius: 28px;
-  height: 200px;
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--navy); color: #fff;
+  border: none; cursor: pointer; font-size: 20px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 90px;
-  position: relative;
+  font-weight: 900; box-shadow: 2px 2px 0 rgba(0,0,0,.3);
+}
+.cat-pill {
+  font-size: 11px; font-weight: 800;
+  background: var(--orange-lt); color: var(--orange);
+  padding: 4px 12px; border-radius: 20px;
+  border: 1.5px solid var(--orange);
+}
+.diff-pill {
+  margin-left: auto;
+  font-size: 10px; font-weight: 800;
+  padding: 4px 10px; border-radius: 20px;
+  border: 1.5px solid;
+}
+.diff-pill.simple   { background: var(--green-hl); color: var(--green-dark); border-color: var(--green-dark); }
+.diff-pill.medium   { background: var(--yellow-hl); color: var(--yellow-dark); border-color: var(--yellow-dark); }
+.diff-pill.advanced { background: #FFE0E0; color: #9B1C1C; border-color: #9B1C1C; }
+
+/* book page with illustration + question */
+.book-page {
+  margin: 14px 20px 10px;
+  background: #fff;
+  border-radius: var(--radius);
+  border: 2px solid #E0D5C0;
+  box-shadow: 4px 4px 0 #D0C5B0;
   overflow: hidden;
-  box-shadow: var(--shadow);
-  cursor: pointer;
 }
-.qa-illus-card .illus-bg {
-  position: absolute; inset: 0;
-  animation: bgPulse 3s ease-in-out infinite;
+.book-illus {
+  height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  font-size: 80px;
 }
-@keyframes bgPulse {
-  0%,100% { opacity: 1; }
-  50%      { opacity: .85; }
-}
-.qa-illus-card .illus-emoji {
+.book-illus .illus-bg { position: absolute; inset: 0; }
+.book-illus .illus-emoji {
   position: relative; z-index: 1;
   animation: float 3s ease-in-out infinite;
 }
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-12px); }
-}
-.qa-illus-card .audio-btn {
-  position: absolute; bottom: 12px; right: 14px; z-index: 2;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(255,255,255,.9); border: none;
-  font-size: 18px; cursor: pointer;
+.book-illus .audio-fab {
+  position: absolute; bottom: 10px; right: 12px; z-index: 2;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  border: none; font-size: 16px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.15);
-  transition: transform .2s;
+  box-shadow: 2px 2px 0 rgba(0,0,0,.3);
+  transition: transform .15s;
 }
-.qa-illus-card .audio-btn:active { transform: scale(.9); }
+.book-illus .audio-fab:active { transform: scale(.9); }
 
-/* QA question text */
-.qa-question {
-  margin: 0 20px 14px;
-  font-size: 20px; font-weight: 800; color: var(--text);
-  line-height: 1.4;
+.book-q-wrap {
+  padding: 14px 16px 14px;
+  border-top: 2px dashed #E0D5C0;
+  background: repeating-linear-gradient(transparent, transparent 27px, #EAE2D2 27px, #EAE2D2 28px);
 }
+.book-q-label {
+  font-family: var(--font-why);
+  font-size: 26px;
+  color: var(--navy);
+  line-height: 1;
+  display: flex; align-items: center; gap: 4px;
+}
+.book-q-label .why-word {
+  font-style: italic;
+  color: var(--orange);
+}
+.book-q-text {
+  font-size: 17px; font-weight: 900; color: var(--navy); margin-top: 4px; line-height: 1.4;
+}
+.book-q-text .q-mark { vertical-align: middle; }
 
-/* Tap-to-reveal */
-.reveal-btn {
-  margin: 0 20px 14px;
-  height: 56px;
-  border-radius: var(--radius);
-  background: linear-gradient(135deg, var(--sun), #FFD60A);
-  border: none; font-size: 16px; font-weight: 800; color: var(--text);
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255,183,3,.4);
-  transition: transform .2s, box-shadow .2s;
+/* tap-to-reveal */
+.reveal-strip {
+  margin: 0 20px 10px;
+  background: var(--navy);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: calc(100% - 40px);
+  cursor: pointer;
+  border: 2px solid var(--gold);
+  box-shadow: 3px 3px 0 rgba(0,0,0,.25);
+  font-size: 15px; font-weight: 800; color: var(--gold);
+  transition: transform .15s;
 }
-.reveal-btn:active { transform: scale(.97); }
+.reveal-strip:active { transform: scale(.98); }
 
-.answer-card {
-  margin: 0 20px 14px;
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--sky);
+/* answer card — styled as a printed answer block */
+.answer-block {
+  margin: 0 20px 10px;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  border: 2px solid #D0C5B0;
+  box-shadow: 3px 3px 0 #D0C5B0;
+  overflow: hidden;
   display: none;
-  animation: revealAnim .4s var(--transition);
+  animation: bookFlip .4s ease;
 }
-.answer-card.shown { display: block; }
-@keyframes revealAnim {
-  from { opacity: 0; transform: translateY(10px) scale(.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.answer-block.shown { display: block; }
+@keyframes bookFlip {
+  from { opacity: 0; transform: rotateX(-10deg) translateY(8px); }
+  to   { opacity: 1; transform: rotateX(0) translateY(0); }
 }
-.answer-card p { font-size: 15px; color: var(--text); line-height: 1.7; }
+.answer-block-header {
+  background: var(--navy);
+  padding: 8px 14px;
+  font-size: 11px; font-weight: 800; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.answer-body {
+  padding: 14px 16px;
+  font-size: 14px; line-height: 1.8; color: var(--text);
+  background: repeating-linear-gradient(transparent, transparent 27px, #EAE2D2 27px, #EAE2D2 28px);
+}
+.answer-body .hl-green  { background: var(--green-hl);  padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--green-dark); }
+.answer-body .hl-yellow { background: var(--yellow-hl); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--yellow-dark); }
+.answer-body .hl-orange { background: var(--orange-lt); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: #C25000; }
 
-/* Fun facts */
-.fun-facts {
-  margin: 0 20px 14px;
-  background: linear-gradient(135deg, #FFF9E6, #FFFDE7);
-  border-radius: var(--radius);
-  padding: 16px;
-  border: 2px dashed var(--sun);
+/* fun facts */
+.fun-facts-block {
+  margin: 0 20px 10px;
+  background: var(--gold-lt);
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--gold);
+  padding: 12px 14px;
+  display: none;
 }
-.fun-facts h3 { font-size: 13px; font-weight: 800; color: var(--sun); margin-bottom: 10px; }
-.fun-fact-item {
-  display: flex; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--text);
-  line-height: 1.5;
+.fun-facts-block.shown { display: block; }
+.fun-facts-block h3 {
+  font-size: 12px; font-weight: 900; color: var(--orange);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
 }
-.fun-fact-item::before { content: '⭐'; flex-shrink: 0; }
+.ff-item {
+  font-size: 13px; color: var(--text); line-height: 1.6;
+  margin-bottom: 8px;
+  display: flex; gap: 8px;
+}
+.ff-item::before { content: '⭐'; flex-shrink: 0; }
 
-/* Action row */
-.qa-actions {
-  margin: 0 20px 14px;
-  display: flex; gap: 10px;
+/* action row */
+.action-row {
+  margin: 0 20px 10px;
+  display: flex; gap: 8px;
 }
-.qa-actions button {
-  flex: 1; height: 48px; border-radius: var(--radius-sm);
-  border: none; cursor: pointer; font-size: 20px;
-  font-weight: 700; transition: transform .2s;
+.action-row button {
+  flex: 1; height: 46px; border-radius: var(--radius-sm);
+  border: 2px solid; cursor: pointer;
+  font-size: 13px; font-weight: 800;
+  font-family: var(--font-body);
+  transition: transform .15s;
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.qa-actions button:active { transform: scale(.95); }
-.btn-fav  { background: #FFE0E0; color: var(--coral); }
-.btn-next { background: var(--sky); color: #fff; flex: 2 !important; font-size: 14px !important; }
-.btn-quiz { background: var(--leaf); color: #fff; font-size: 14px !important; }
+.action-row button:active { transform: translate(2px,2px); }
+.btn-fav  { background: #FFE0E0; color: var(--red); border-color: var(--red); }
+.btn-next { background: var(--navy); color: var(--gold); border-color: var(--navy); flex: 2 !important; }
+.btn-quiz { background: var(--orange); color: #fff; border-color: var(--orange); }
 
 /* ── QUIZ SCREEN ─────────────────────────────────────────── */
-.quiz-header {
-  padding: 14px 20px;
-  display: flex; align-items: center; gap: 12px;
+#screen-quiz { background: var(--cream); }
+
+.quiz-topbar {
+  padding: 12px 18px 10px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 2px dashed #DDD0B8;
 }
-.progress-bar-wrap {
-  flex: 1;
-  height: 10px; background: #EAECF4; border-radius: 5px; overflow: hidden;
+.prog-wrap {
+  flex: 1; height: 10px;
+  background: #DDD0B8; border-radius: 5px; overflow: hidden;
 }
-.progress-bar-fill {
+.prog-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--sky), var(--leaf));
+  background: linear-gradient(90deg, var(--orange), var(--gold));
   border-radius: 5px;
   transition: width .4s ease;
 }
-.quiz-q-count { font-size: 13px; font-weight: 700; color: var(--muted); }
+.quiz-count { font-size: 13px; font-weight: 800; color: var(--muted); }
 
-.quiz-question {
-  margin: 8px 20px 20px;
-  font-size: 18px; font-weight: 800; color: var(--text); line-height: 1.45;
-}
-
-.quiz-options { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
-.quiz-option {
-  padding: 16px 18px;
-  background: var(--card);
+.quiz-q-book {
+  margin: 12px 20px 14px;
+  background: #fff;
   border-radius: var(--radius);
-  border: 2.5px solid transparent;
-  font-size: 15px; font-weight: 600; color: var(--text);
-  cursor: pointer;
-  transition: all .2s;
-  box-shadow: var(--shadow-sm);
+  border: 2px solid #D0C5B0;
+  box-shadow: 3px 3px 0 #D0C5B0;
+  padding: 16px 18px;
+  background-image: repeating-linear-gradient(transparent, transparent 27px, #EAE2D2 27px, #EAE2D2 28px);
 }
-.quiz-option:hover { border-color: var(--sky); background: var(--sky-light); }
-.quiz-option.correct { border-color: var(--leaf); background: #E8FBF4; color: #065f46; }
-.quiz-option.wrong   { border-color: var(--coral); background: #FFE8E8; color: #9B1C1C; }
+.quiz-q-book .why-label {
+  font-family: var(--font-why);
+  font-size: 20px; color: var(--orange); margin-bottom: 6px;
+}
+.quiz-q-text { font-size: 17px; font-weight: 900; color: var(--navy); line-height: 1.4; }
 
-.quiz-feedback {
-  margin: 14px 20px 0;
+.quiz-opts { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt {
   padding: 14px 16px;
+  background: #fff;
   border-radius: var(--radius-sm);
-  font-size: 14px; font-weight: 700;
+  border: 2px solid #D0C5B0;
+  box-shadow: 2px 2px 0 #D0C5B0;
+  font-size: 14px; font-weight: 700; color: var(--text);
+  cursor: pointer;
+  transition: transform .15s, border-color .15s;
+  font-family: var(--font-body);
+}
+.quiz-opt:hover  { border-color: var(--orange); transform: translateX(4px); }
+.quiz-opt.correct { background: var(--green-hl); border-color: var(--green-dark); color: var(--green-dark); box-shadow: 2px 2px 0 var(--green-dark); }
+.quiz-opt.wrong   { background: #FFE0E0; border-color: var(--red); color: var(--red); box-shadow: 2px 2px 0 var(--red); }
+
+.quiz-fb {
+  margin: 12px 20px 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 700;
+  border: 2px solid;
   display: none;
+  font-family: var(--font-body);
 }
-.quiz-feedback.show { display: block; animation: revealAnim .3s ease; }
-.quiz-feedback.ok  { background: #E8FBF4; color: #065f46; }
-.quiz-feedback.ko  { background: #FFE8E8; color: #9B1C1C; }
+.quiz-fb.show { display: block; animation: pgIn .3s ease; }
+.quiz-fb.ok { background: var(--green-hl); color: var(--green-dark); border-color: var(--green-dark); }
+.quiz-fb.ko { background: #FFE0E0; color: var(--red); border-color: var(--red); }
 
-.quiz-next-btn {
-  margin: 16px 20px 0;
+.quiz-next {
+  margin: 14px 20px 0;
   width: calc(100% - 40px);
-  height: 54px; border-radius: var(--radius);
-  background: var(--sky); color: #fff;
-  border: none; font-size: 16px; font-weight: 800;
+  height: 52px; border-radius: var(--radius-sm);
+  background: var(--navy); color: var(--gold);
+  border: 2px solid var(--gold);
+  font-size: 16px; font-weight: 800;
+  font-family: var(--font-body);
   cursor: pointer; display: none;
-  box-shadow: 0 4px 16px rgba(108,99,255,.4);
-  transition: transform .2s;
+  box-shadow: 3px 3px 0 rgba(0,0,0,.25);
+  transition: transform .15s;
 }
-.quiz-next-btn.show { display: block; }
-.quiz-next-btn:active { transform: scale(.97); }
+.quiz-next.show { display: block; }
+.quiz-next:active { transform: translate(2px,2px); }
 
-/* ── RESULT SCREEN ───────────────────────────────────────── */
+/* ── RESULT ──────────────────────────────────────────────── */
 #screen-result {
-  align-items: center; justify-content: center; text-align: center;
-  padding: 30px 24px 80px;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 30px 24px 80px;
+  background: var(--navy);
 }
-.result-stars { font-size: 52px; margin-bottom: 8px; animation: popIn .5s var(--transition); }
-@keyframes popIn {
-  from { transform: scale(0); }
-  to   { transform: scale(1); }
+.result-cover {
+  background: linear-gradient(160deg, #252A5A, #1B2045);
+  border-radius: 24px;
+  border: 3px solid var(--gold);
+  padding: 30px 24px;
+  width: 100%;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.3);
 }
-.result-title { font-size: 28px; font-weight: 900; color: var(--text); margin-bottom: 6px; }
-.result-score { font-size: 16px; color: var(--muted); margin-bottom: 24px; }
-.result-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-.result-actions button {
-  height: 54px; border-radius: var(--radius);
-  border: none; font-size: 16px; font-weight: 800; cursor: pointer;
-  transition: transform .2s;
+.result-stars { font-size: 48px; margin-bottom: 10px; animation: popIn .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes popIn { from { transform: scale(0) rotate(-10deg); } to { transform: scale(1) rotate(0); } }
+.result-title {
+  font-family: var(--font-why);
+  font-size: 40px; color: var(--gold); margin-bottom: 4px;
 }
-.result-actions button:active { transform: scale(.97); }
-.btn-primary   { background: var(--sky); color: #fff; box-shadow: 0 4px 16px rgba(108,99,255,.4); }
-.btn-secondary { background: var(--card); color: var(--text); box-shadow: var(--shadow-sm); }
+.result-score { font-size: 15px; color: rgba(255,255,255,.7); margin-bottom: 24px; font-weight: 700; }
+.result-mascot { font-size: 80px; animation: float 2.5s ease-in-out infinite; margin: 10px 0 20px; }
+.result-btn {
+  width: 100%; height: 50px; border-radius: var(--radius-sm);
+  border: 2px solid; font-size: 15px; font-weight: 800;
+  font-family: var(--font-body);
+  cursor: pointer; margin-bottom: 10px;
+  transition: transform .15s;
+}
+.result-btn:active { transform: translate(2px,2px); }
+.result-btn.primary   { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.result-btn.secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.3); }
 
 /* ── PARENT DASHBOARD ────────────────────────────────────── */
-.parent-header {
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #1A1A2E, #2D2B55);
-  border-radius: 0 0 28px 28px;
-}
-.parent-header h1 { font-size: 20px; font-weight: 800; color: #fff; }
-.parent-header p  { font-size: 13px; color: rgba(255,255,255,.6); margin-top: 2px; }
+#screen-parent { background: var(--cream); }
 
-.stats-row {
+.parent-cover {
+  background: var(--navy);
+  padding: 18px 20px 22px;
+}
+.parent-cover h1 { font-size: 20px; font-weight: 900; color: var(--gold); font-family: var(--font-why); font-style: italic; }
+.parent-cover p  { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; }
+
+.stat-row {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px; margin: 16px 20px 4px;
+  gap: 10px; margin: 14px 20px 4px;
 }
 .stat-card {
-  background: var(--card); border-radius: var(--radius-sm);
-  padding: 14px 10px; text-align: center;
-  box-shadow: var(--shadow-sm);
+  background: #fff;
+  border-radius: var(--radius-sm);
+  border: 2px solid #D0C5B0;
+  box-shadow: 3px 3px 0 #D0C5B0;
+  padding: 12px 8px; text-align: center;
 }
-.stat-card .stat-val { font-size: 24px; font-weight: 900; color: var(--sky); }
-.stat-card .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 600; }
+.stat-card .sv { font-size: 22px; font-weight: 900; color: var(--navy); }
+.stat-card .sl { font-size: 9px; color: var(--muted); font-weight: 800; text-transform: uppercase; margin-top: 2px; }
 
-.week-chart { margin: 14px 20px; }
-.week-chart h3 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-.chart-bars {
-  display: flex; align-items: flex-end; gap: 8px; height: 80px;
-}
-.chart-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-.chart-bar {
-  width: 100%;
-  border-radius: 6px 6px 0 0;
-  background: var(--sky-light);
-  min-height: 4px;
+.chart-wrap { margin: 0 20px 14px; }
+.chart-wrap h3 { font-size: 13px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.bar-fill {
+  width: 100%; border-radius: 5px 5px 0 0;
+  background: #DDD0B8; min-height: 4px;
   transition: height .6s ease;
-  position: relative;
 }
-.chart-bar.active { background: var(--sky); }
-.chart-day { font-size: 9px; color: var(--muted); font-weight: 600; }
+.bar-fill.today { background: var(--orange); }
+.bar-day { font-size: 9px; color: var(--muted); font-weight: 800; }
 
-.filter-section { margin: 0 20px 14px; }
-.filter-section h3 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-.toggle-row {
-  background: var(--card); border-radius: var(--radius-sm);
-  overflow: hidden; box-shadow: var(--shadow-sm);
-}
-.toggle-item {
+.toggle-section { margin: 0 20px 14px; }
+.toggle-section h3 { font-size: 13px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+.toggle-list { background: #fff; border-radius: var(--radius-sm); border: 2px solid #D0C5B0; overflow: hidden; }
+.tgl-item {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid #F0F0F7;
-  font-size: 14px; font-weight: 600; color: var(--text);
+  padding: 13px 14px; border-bottom: 1px dashed #E0D5C0;
+  font-size: 13px; font-weight: 700; color: var(--text);
 }
-.toggle-item:last-child { border-bottom: none; }
-.toggle {
-  width: 44px; height: 26px; border-radius: 13px;
-  background: #DDD; cursor: pointer; position: relative;
-  transition: background .2s;
-  border: none;
+.tgl-item:last-child { border-bottom: none; }
+.tgl {
+  width: 42px; height: 24px; border-radius: 12px;
+  background: #D0C5B0; cursor: pointer; position: relative;
+  transition: background .2s; border: none; flex-shrink: 0;
 }
-.toggle.on { background: var(--sky); }
-.toggle::after {
+.tgl.on { background: var(--orange); }
+.tgl::after {
   content: ''; position: absolute;
-  width: 20px; height: 20px; border-radius: 50%;
+  width: 18px; height: 18px; border-radius: 50%;
   background: #fff; top: 3px; left: 3px;
-  transition: transform .2s;
-  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  transition: transform .2s; box-shadow: 1px 1px 3px rgba(0,0,0,.2);
 }
-.toggle.on::after { transform: translateX(18px); }
+.tgl.on::after { transform: translateX(18px); }
 
-/* ── PROFILE SCREEN ──────────────────────────────────────── */
-.profile-hero {
-  background: linear-gradient(135deg, var(--sky) 0%, #9B8FFF 100%);
-  padding: 24px 20px 40px;
-  text-align: center;
-  position: relative;
+/* ── PROFILE ─────────────────────────────────────────────── */
+#screen-profile { background: var(--navy); }
+
+.profile-top {
+  background: var(--navy);
+  padding: 20px 20px 28px; text-align: center;
 }
-.profile-avatar-big {
-  width: 88px; height: 88px; border-radius: 50%;
-  background: rgba(255,255,255,.25); border: 4px solid #fff;
+.profile-avatar {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(245,197,24,.15);
+  border: 3px solid var(--gold);
   margin: 0 auto 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 46px;
+  font-size: 48px;
+  box-shadow: 0 0 20px rgba(245,197,24,.3);
 }
-.profile-name { font-size: 22px; font-weight: 900; color: #fff; }
-.profile-sub  { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 2px; }
+.profile-name { font-family: var(--font-why); font-size: 32px; color: var(--gold); }
+.profile-sub  { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; font-weight: 700; }
 
-.achievements-scroll {
+.badges-scroll {
   display: flex; gap: 10px;
   overflow-x: auto; padding: 0 20px 4px;
-  scrollbar-width: none; margin-top: -22px;
+  scrollbar-width: none;
+  margin-top: -16px;
 }
-.achievements-scroll::-webkit-scrollbar { display: none; }
+.badges-scroll::-webkit-scrollbar { display: none; }
 .badge-card {
-  flex-shrink: 0;
-  background: var(--card);
+  flex-shrink: 0; min-width: 88px;
+  background: var(--cream);
   border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  text-align: center;
-  box-shadow: var(--shadow);
-  min-width: 90px;
+  border: 2px solid #D0C5B0;
+  box-shadow: 3px 3px 0 #D0C5B0;
+  padding: 12px 14px; text-align: center;
 }
-.badge-card .badge-icon { font-size: 28px; }
-.badge-card .badge-label { font-size: 10px; color: var(--muted); margin-top: 4px; font-weight: 600; }
-.badge-card .badge-val   { font-size: 16px; font-weight: 800; color: var(--text); }
+.badge-card .bi { font-size: 26px; }
+.badge-card .bv { font-size: 18px; font-weight: 900; color: var(--navy); }
+.badge-card .bl { font-size: 10px; color: var(--muted); font-weight: 800; text-transform: uppercase; }
 
-.streak-banner {
+.streak-bar {
   margin: 14px 20px;
-  background: linear-gradient(135deg, #FF6B6B, #FFB703);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, var(--red), var(--orange));
+  border-radius: var(--radius-sm);
+  border: 2px solid #fff3;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,.25);
 }
-.streak-banner .fire { font-size: 36px; }
-.streak-banner .streak-text { color: #fff; }
-.streak-banner .streak-text strong { font-size: 20px; font-weight: 900; display: block; }
-.streak-banner .streak-text span { font-size: 12px; opacity: .8; }
+.streak-bar .fire { font-size: 34px; }
+.streak-bar .st  { color: #fff; }
+.streak-bar .st strong { font-size: 20px; font-weight: 900; display: block; }
+.streak-bar .st span  { font-size: 11px; opacity: .8; font-weight: 700; }
 
-.lang-section { margin: 0 20px 14px; }
-.lang-section h3 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+.avatar-unlock-scroll {
+  display: flex; gap: 10px;
+  overflow-x: auto; padding: 6px 20px 4px;
+  scrollbar-width: none;
+}
+.avatar-unlock-scroll::-webkit-scrollbar { display: none; }
+.unlock-item {
+  flex-shrink: 0; text-align: center; cursor: pointer;
+}
+.unlock-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  border: 2.5px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin: 0 auto;
+  transition: border-color .2s;
+}
+.unlock-circle.equipped { border-color: var(--gold); box-shadow: 0 0 10px rgba(245,197,24,.5); }
+.unlock-circle.locked   { opacity: .35; }
+.unlock-label { font-size: 9px; color: rgba(255,255,255,.6); font-weight: 800; margin-top: 4px; text-transform: uppercase; }
+
+.lang-section { margin: 14px 20px; }
+.lang-section h3 { font-size: 13px; font-weight: 900; color: rgba(255,255,255,.7); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
 .lang-pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .lang-pill {
-  padding: 8px 16px; border-radius: 20px;
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  border: 2px solid transparent;
-  background: var(--card); color: var(--text);
-  box-shadow: var(--shadow-sm); transition: all .2s;
+  padding: 7px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 800; cursor: pointer;
+  border: 2px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.07); color: rgba(255,255,255,.5);
+  transition: all .2s;
 }
-.lang-pill.active { background: var(--sky); color: #fff; border-color: var(--sky); }
-.lang-pill.phase2 { opacity: .5; cursor: not-allowed; }
+.lang-pill.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.lang-pill.p2 { opacity: .4; cursor: not-allowed; }
 
 /* ── TOAST ───────────────────────────────────────────────── */
 #toast {
   position: absolute; bottom: 90px; left: 20px; right: 20px;
-  background: #1A1A2E; color: #fff;
-  border-radius: 14px; padding: 14px 18px;
-  font-size: 14px; font-weight: 600;
+  background: var(--navy); color: var(--gold);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-sm); padding: 12px 16px;
+  font-size: 13px; font-weight: 800;
   display: none; z-index: 200;
-  box-shadow: 0 8px 24px rgba(0,0,0,.25);
-  animation: toastIn .3s ease;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.3);
+  animation: pgIn .3s ease;
+  font-family: var(--font-body);
 }
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── SCREEN LABELS (outside phone for demo) ──────────────── */
 </style>
 </head>
 <body>
-
 <div id="phone">
-  <!-- ── HOME ──────────────────────────────────────────────── -->
+
+  <!-- ══ HOME ══════════════════════════════════════════════ -->
   <div id="screen-home" class="screen active">
-    <div class="header">
-      <div>
-        <h1>Hi, Timmy! 👋</h1>
-        <div class="subtitle">What do you want to explore today?</div>
+
+    <!-- Book cover hero -->
+    <div class="cover-hero">
+      <div class="stars" id="starField"></div>
+      <div class="cover-title">10,000 <span>Whys</span></div>
+      <div class="cover-subtitle">Kids Explorer Edition</div>
+      <div class="cover-mascots">
+        <span class="astronaut">🧑‍🚀</span>
       </div>
-      <div class="avatar-bubble" onclick="go('profile')">🦊</div>
     </div>
 
+    <!-- Search -->
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input class="search-bar" type="text" placeholder="Search any Why…"
-             id="searchInput" oninput="onSearch(this.value)" onfocus="showSuggest()" onblur="hideSuggest()">
-      <div class="suggest-dropdown" id="suggestDrop">
-        <div class="suggest-item" onmousedown="pickSuggest('Why do cats purr?')">🐱 Why do cats purr?</div>
-        <div class="suggest-item" onmousedown="pickSuggest('Why is the sky blue?')">🌤️ Why is the sky blue?</div>
-        <div class="suggest-item" onmousedown="pickSuggest('Why do stars twinkle?')">⭐ Why do stars twinkle?</div>
-        <div class="suggest-item" onmousedown="pickSuggest('Why do elephants have big ears?')">🐘 Why do elephants have big ears?</div>
+      <input class="search-bar" id="searchInput" type="text"
+             placeholder="Search any Why…"
+             oninput="onSearch(this.value)" onfocus="showSug()" onblur="hideSug()">
+      <div class="suggest-dropdown" id="sugDrop">
+        <div class="suggest-item" onmousedown="pickSug('Why do cats purr?')">🐱 Why do cats purr?</div>
+        <div class="suggest-item" onmousedown="pickSug('Why is the sky blue?')">🌤️ Why is the sky blue?</div>
+        <div class="suggest-item" onmousedown="pickSug('Why do stars twinkle?')">⭐ Why do stars twinkle?</div>
+        <div class="suggest-item" onmousedown="pickSug('Why do sunflowers turn toward the Sun?')">🌻 Why do sunflowers turn toward the Sun?</div>
       </div>
     </div>
 
+    <!-- Daily challenge -->
     <div class="daily-banner" onclick="go('qa')">
-      <div class="emoji">🌟</div>
+      <div class="db-icon">🌟</div>
       <div>
-        <div class="label">Daily Why • Day 42</div>
-        <div class="question">Why do astronauts float in space?</div>
+        <div class="db-label">Daily Why • Day 42</div>
+        <div class="db-q">
+          <span class="why-badge">Why</span> do astronauts float in space?
+        </div>
       </div>
       <div class="arrow">›</div>
     </div>
 
-    <div class="section-title">
+    <div class="star-divider">★ ★ ★</div>
+
+    <!-- Categories -->
+    <div class="section-head">
       <h2>Explore Categories</h2>
-      <span class="see-all" onclick="go('categories')">See all</span>
+      <span class="see-all" onclick="go('home')">See all</span>
     </div>
-
     <div class="cat-grid">
-      <div class="cat-card" onclick="selectCat(this,'Animals')">
-        <div class="mascot">🦉</div>
-        <div class="cat-name">Animals</div>
-        <div class="cat-count">500 Whys</div>
+      <div class="cat-card" onclick="goQA('Animals','🦉','🐱','simple')">
+        <span class="mascot">🦉</span>
+        <span class="cat-name">Animals</span>
+        <span class="cat-count">500 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Space')">
-        <div class="mascot">🚀</div>
-        <div class="cat-name">Space</div>
-        <div class="cat-count">300 Whys</div>
+      <div class="cat-card" onclick="goQA('Space','🚀','🧑‍🚀','advanced')">
+        <span class="mascot">🚀</span>
+        <span class="cat-name">Space</span>
+        <span class="cat-count">300 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Body')">
-        <div class="mascot">🤖</div>
-        <div class="cat-name">Human Body</div>
-        <div class="cat-count">400 Whys</div>
+      <div class="cat-card" onclick="goQA('Body','🤖','🫀','medium')">
+        <span class="mascot">🤖</span>
+        <span class="cat-name">Human Body</span>
+        <span class="cat-count">400 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Earth')">
-        <div class="mascot">🌿</div>
-        <div class="cat-name">Earth & Nature</div>
-        <div class="cat-count">350 Whys</div>
+      <div class="cat-card" onclick="goQA('Earth','🌿','🌋','medium')">
+        <span class="mascot">🌿</span>
+        <span class="cat-name">Earth & Nature</span>
+        <span class="cat-count">350 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Science')">
-        <div class="mascot">💡</div>
-        <div class="cat-name">Science</div>
-        <div class="cat-count">500 Whys</div>
+      <div class="cat-card" onclick="goQA('Science','💡','🧪','advanced')">
+        <span class="mascot">💡</span>
+        <span class="cat-name">Science</span>
+        <span class="cat-count">500 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Tech')">
-        <div class="mascot">⚙️</div>
-        <div class="cat-name">Tech & Machines</div>
-        <div class="cat-count">250 Whys</div>
+      <div class="cat-card" onclick="goQA('Tech','⚙️','💻','advanced')">
+        <span class="mascot">⚙️</span>
+        <span class="cat-name">Tech</span>
+        <span class="cat-count">250 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Plants')">
-        <div class="mascot">🌱</div>
-        <div class="cat-name">Plants</div>
-        <div class="cat-count">200 Whys</div>
+      <div class="cat-card" onclick="goQA('Plants','🌱','🌻','medium')">
+        <span class="mascot">🌱</span>
+        <span class="cat-name">Plants</span>
+        <span class="cat-count">200 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'History')">
-        <div class="mascot">📜</div>
-        <div class="cat-name">History</div>
-        <div class="cat-count">200 Whys</div>
+      <div class="cat-card" onclick="goQA('History','📜','🏛️','simple')">
+        <span class="mascot">📜</span>
+        <span class="cat-name">History</span>
+        <span class="cat-count">200 Whys</span>
       </div>
-      <div class="cat-card" onclick="selectCat(this,'Food')">
-        <div class="mascot">🍳</div>
-        <div class="cat-name">Food & Life</div>
-        <div class="cat-count">300 Whys</div>
+      <div class="cat-card" onclick="goQA('Food','🍳','🧅','medium')">
+        <span class="mascot">🍳</span>
+        <span class="cat-name">Food & Life</span>
+        <span class="cat-count">300 Whys</span>
       </div>
     </div>
 
-    <div class="section-title" style="margin-top:18px">
+    <div class="star-divider" style="margin-top:14px">★ ★ ★</div>
+
+    <!-- Recent -->
+    <div class="section-head">
       <h2>Recently Viewed</h2>
     </div>
     <div class="recent-scroll">
-      <div class="recent-chip" onclick="go('qa')"><span class="chip-emoji">🐱</span>Why cats purr</div>
-      <div class="recent-chip" onclick="go('qa')"><span class="chip-emoji">🌤️</span>Blue sky</div>
-      <div class="recent-chip" onclick="go('qa')"><span class="chip-emoji">⭐</span>Twinkling stars</div>
-      <div class="recent-chip" onclick="go('qa')"><span class="chip-emoji">🐘</span>Elephant ears</div>
-      <div class="recent-chip" onclick="go('qa')"><span class="chip-emoji">🐟</span>Fish scales</div>
+      <div class="recent-chip" onclick="go('qa')">🐱 Cats purr</div>
+      <div class="recent-chip" onclick="go('qa')">🌤️ Blue sky</div>
+      <div class="recent-chip" onclick="go('qa')">⭐ Twinkling stars</div>
+      <div class="recent-chip" onclick="go('qa')">🐘 Elephant ears</div>
+      <div class="recent-chip" onclick="go('qa')">🐟 Fish scales</div>
+      <div class="recent-chip" onclick="go('qa')">🌻 Sunflowers</div>
     </div>
   </div>
 
-  <!-- ── Q&A CARD ────────────────────────────────────────── -->
-  <div id="screen-qa" class="screen">
-    <div class="qa-header">
+  <!-- ══ Q&A ════════════════════════════════════════════════ -->
+  <div id="screen-qa" class="screen lined">
+    <div class="qa-topbar">
       <button class="back-btn" onclick="go('home')">‹</button>
-      <span class="cat-tag">🚀 Space</span>
-      <span class="diff-tag advanced" id="diffTag">Advanced</span>
+      <span class="cat-pill" id="qaCat">🚀 Space</span>
+      <span class="diff-pill advanced" id="qaDiff">Advanced</span>
     </div>
 
-    <div class="qa-illus-card" id="illustCard">
-      <div class="illus-bg" id="illustBg" style="background:linear-gradient(135deg,#E8EAF6,#C5CAE9)"></div>
-      <span class="illus-emoji" id="illustEmoji">🧑‍🚀</span>
-      <button class="audio-btn" onclick="playAudio()" id="audioBtn">🔊</button>
+    <!-- Book page: illustration + question -->
+    <div class="book-page">
+      <div class="book-illus">
+        <div class="illus-bg" id="illustBg" style="background:linear-gradient(135deg,#E8EAF6,#C5CAE9)"></div>
+        <span class="illus-emoji" id="illustEmoji">🧑‍🚀</span>
+        <button class="audio-fab" onclick="playAudio()" id="audioBtn">🔊</button>
+      </div>
+      <div class="book-q-wrap">
+        <div class="book-q-label">
+          <span class="why-word">Why</span> do
+        </div>
+        <div class="book-q-text" id="qaShortText">
+          astronauts float in space? <span class="q-mark">?</span>
+        </div>
+      </div>
     </div>
 
-    <div class="qa-question" id="qaText">Why do astronauts float in space?</div>
-
-    <button class="reveal-btn" id="revealBtn" onclick="revealAnswer()">
+    <!-- Reveal -->
+    <div class="reveal-strip" id="revealBtn" onclick="revealAns()">
       ✨ Tap to reveal the answer!
-    </button>
-
-    <div class="answer-card" id="answerCard">
-      <p id="answerText">Astronauts float because they are in free fall! Their spacecraft orbits Earth by constantly falling toward it while also moving sideways fast enough to keep missing it. This weightless feeling is called <strong>microgravity</strong>.</p>
     </div>
 
-    <div class="fun-facts" id="funFacts" style="display:none">
-      <h3>✨ Fun Facts</h3>
-      <div class="fun-fact-item">Astronauts grow up to 5 cm taller in space because the spine stretches without gravity.</div>
-      <div class="fun-fact-item">Water floats as blobs in space — astronauts drink from sealed bags!</div>
+    <!-- Answer block -->
+    <div class="answer-block" id="ansBlock">
+      <div class="answer-block-header">📖 Answer</div>
+      <div class="answer-body" id="ansBody">
+        Astronauts float because they are in <span class="hl-green">free fall</span>! Their spacecraft orbits Earth by constantly falling toward it while also moving sideways fast enough to keep missing it. This weightless feeling is called <span class="hl-yellow">microgravity</span>.
+      </div>
     </div>
 
-    <div class="qa-actions">
-      <button class="btn-fav" onclick="toggleFav(this)" title="Favorite">🤍</button>
-      <button class="btn-next" onclick="nextQuestion()">Next Why ›</button>
-      <button class="btn-quiz" onclick="go('quiz')">Quiz 🧩</button>
+    <!-- Fun facts -->
+    <div class="fun-facts-block" id="ffBlock">
+      <h3>⭐ Fun Facts</h3>
+      <div id="ffItems"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-fav" onclick="toggleFav(this)">🤍</button>
+      <button class="btn-next" onclick="nextQ()">Next Why ›</button>
+      <button class="btn-quiz" onclick="go('quiz'); resetQuiz()">Quiz 🧩</button>
     </div>
   </div>
 
-  <!-- ── QUIZ ───────────────────────────────────────────── -->
-  <div id="screen-quiz" class="screen">
-    <div class="quiz-header">
+  <!-- ══ QUIZ ══════════════════════════════════════════════ -->
+  <div id="screen-quiz" class="screen lined">
+    <div class="quiz-topbar">
       <button class="back-btn" onclick="go('qa')">‹</button>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" id="quizProgress" style="width:20%"></div>
+      <div class="prog-wrap">
+        <div class="prog-fill" id="quizProg" style="width:20%"></div>
       </div>
-      <span class="quiz-q-count" id="quizCount">1 / 5</span>
+      <span class="quiz-count" id="quizCountLbl">1 / 5</span>
     </div>
 
-    <div class="qa-illus-card" style="margin:0 20px 16px;height:120px;font-size:56px">
-      <div class="illus-bg" style="background:linear-gradient(135deg,#E8EAF6,#C5CAE9)"></div>
-      <span class="illus-emoji">🚀</span>
+    <div class="quiz-q-book">
+      <div class="why-label">Why?</div>
+      <div class="quiz-q-text" id="quizQText">Why is there no sound in space?</div>
     </div>
 
-    <div class="quiz-question" id="quizQ">Why is there no sound in space?</div>
-
-    <div class="quiz-options" id="quizOptions">
-      <div class="quiz-option" onclick="pickOption(this, false)">Space is too cold for sound to travel</div>
-      <div class="quiz-option" onclick="pickOption(this, true)">Space has no air particles to carry vibrations</div>
-      <div class="quiz-option" onclick="pickOption(this, false)">Sound travels but too slowly to hear</div>
-      <div class="quiz-option" onclick="pickOption(this, false)">Astronaut helmets block all sound</div>
-    </div>
-
-    <div class="quiz-feedback" id="quizFeedback"></div>
-
-    <button class="quiz-next-btn" id="quizNextBtn" onclick="nextQuizQ()">Next Question ›</button>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <div class="quiz-fb"  id="quizFb"></div>
+    <button class="quiz-next" id="quizNextBtn" onclick="nextQuizQ()">Next Question ›</button>
   </div>
 
-  <!-- ── RESULT ─────────────────────────────────────────── -->
+  <!-- ══ RESULT ══════════════════════════════════════════════ -->
   <div id="screen-result" class="screen">
-    <div class="result-stars" id="resultStars">⭐⭐⭐</div>
-    <div class="result-title" id="resultTitle">Brilliant! 🎉</div>
-    <div class="result-score" id="resultScore">You got 5/5 correct!</div>
-    <div style="font-size:80px;margin:16px 0;animation:float 2s ease-in-out infinite">🏆</div>
-    <div class="result-actions">
-      <button class="btn-primary" onclick="go('home')">🏠 Back to Home</button>
-      <button class="btn-secondary" onclick="go('quiz'); resetQuiz()">🔁 Try Again</button>
-      <button class="btn-secondary" onclick="go('qa')">📖 Read More</button>
+    <div class="result-cover">
+      <div class="result-stars" id="rStars">⭐⭐⭐</div>
+      <div class="result-title" id="rTitle">Brilliant!</div>
+      <div class="result-score" id="rScore">You got 5 / 5 correct!</div>
+      <div class="result-mascot">🏆</div>
+      <button class="result-btn primary"   onclick="go('home')">🏠 Back to Home</button>
+      <button class="result-btn secondary" onclick="go('quiz'); resetQuiz()">🔁 Try Again</button>
+      <button class="result-btn secondary" onclick="go('qa')">📖 Keep Exploring</button>
     </div>
   </div>
 
-  <!-- ── PARENT DASHBOARD ───────────────────────────────── -->
+  <!-- ══ PARENT DASHBOARD ════════════════════════════════════ -->
   <div id="screen-parent" class="screen">
-    <div class="parent-header">
-      <h1>👨‍👩‍👧 Parent Dashboard</h1>
-      <p>Timmy's learning at a glance</p>
+    <div class="parent-cover">
+      <h1>Parent Dashboard</h1>
+      <p>Timmy's learning at a glance 👨‍👩‍👧</p>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-val">142</div>
-        <div class="stat-lbl">Whys Answered</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">18</div>
-        <div class="stat-lbl">Quizzes Done</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">7🔥</div>
-        <div class="stat-lbl">Day Streak</div>
-      </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="sv">142</div><div class="sl">Whys Done</div></div>
+      <div class="stat-card"><div class="sv">18</div><div class="sl">Quizzes</div></div>
+      <div class="stat-card"><div class="sv">🔥 7</div><div class="sl">Day Streak</div></div>
     </div>
 
-    <div class="week-chart">
-      <h3>Time spent this week (minutes)</h3>
+    <div class="chart-wrap" style="margin-top:14px">
+      <h3>Time this week (min)</h3>
       <div class="chart-bars" id="chartBars"></div>
     </div>
 
-    <div class="filter-section">
+    <div class="star-divider" style="margin:0 20px">★ ★ ★</div>
+
+    <div class="toggle-section">
       <h3>Content Filters</h3>
-      <div class="toggle-row">
-        <div class="toggle-item">
-          <span>🐱 Animals</span>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="toggle-item">
-          <span>🚀 Space</span>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="toggle-item">
-          <span>📜 History & Culture</span>
-          <button class="toggle" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="toggle-item">
-          <span>🔊 Audio Narration</span>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="toggle-item">
-          <span>🕐 Daily Limit (40 min)</span>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
+      <div class="toggle-list">
+        <div class="tgl-item"><span>🐱 Animals</span>     <button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-item"><span>🚀 Space</span>       <button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-item"><span>📜 History</span>     <button class="tgl"    onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-item"><span>🔊 Narration</span>   <button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-item"><span>🕐 Daily Limit (40 min)</span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
       </div>
     </div>
 
-    <div class="filter-section">
+    <div class="toggle-section">
       <h3>Offline Downloads</h3>
-      <div class="toggle-row">
-        <div class="toggle-item">
-          <span>🦉 Animals <small style="color:var(--muted)">500 Qs</small></span>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="toggle-item">
-          <span>🚀 Space <small style="color:var(--muted)">300 Qs</small></span>
-          <button class="toggle" onclick="this.classList.toggle('on')"></button>
-        </div>
+      <div class="toggle-list">
+        <div class="tgl-item"><span>🦉 Animals <small style="color:var(--muted)">500 Qs</small></span><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="tgl-item"><span>🚀 Space <small style="color:var(--muted)">300 Qs</small></span>  <button class="tgl"    onclick="this.classList.toggle('on')"></button></div>
       </div>
     </div>
   </div>
 
-  <!-- ── PROFILE ────────────────────────────────────────── -->
+  <!-- ══ PROFILE ════════════════════════════════════════════ -->
   <div id="screen-profile" class="screen">
-    <div class="profile-hero">
-      <div class="profile-avatar-big">🦊</div>
+    <div class="profile-top">
+      <div class="profile-avatar">🦊</div>
       <div class="profile-name">Timmy</div>
       <div class="profile-sub">Space Explorer · Age 8</div>
     </div>
 
-    <div class="achievements-scroll">
-      <div class="badge-card">
-        <div class="badge-icon">⭐</div>
-        <div class="badge-val">284</div>
-        <div class="badge-label">Total Stars</div>
-      </div>
-      <div class="badge-card">
-        <div class="badge-icon">✅</div>
-        <div class="badge-val">142</div>
-        <div class="badge-label">Whys Done</div>
-      </div>
-      <div class="badge-card">
-        <div class="badge-icon">🏆</div>
-        <div class="badge-val">3</div>
-        <div class="badge-label">Trophies</div>
-      </div>
-      <div class="badge-card">
-        <div class="badge-icon">❤️</div>
-        <div class="badge-val">24</div>
-        <div class="badge-label">Favorites</div>
-      </div>
+    <div class="badges-scroll">
+      <div class="badge-card"><div class="bi">⭐</div><div class="bv">284</div><div class="bl">Stars</div></div>
+      <div class="badge-card"><div class="bi">✅</div><div class="bv">142</div><div class="bl">Whys Done</div></div>
+      <div class="badge-card"><div class="bi">🏆</div><div class="bv">3</div><div class="bl">Trophies</div></div>
+      <div class="badge-card"><div class="bi">❤️</div><div class="bv">24</div><div class="bl">Saved</div></div>
     </div>
 
-    <div class="streak-banner" style="margin-top:18px">
+    <div class="streak-bar">
       <span class="fire">🔥</span>
-      <div class="streak-text">
+      <div class="st">
         <strong>7-Day Streak!</strong>
         <span>Keep exploring every day to keep it going</span>
       </div>
     </div>
 
-    <div class="section-title" style="margin-top:10px">
-      <h2>Avatar Unlocks</h2>
+    <div class="section-head" style="margin-top:6px;padding-left:20px;padding-right:20px">
+      <h2 style="color:rgba(255,255,255,.7)">Avatar Unlocks</h2>
     </div>
-    <div class="recent-scroll" style="padding-bottom:12px">
-      <div style="flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="font-size:36px;background:var(--card);border-radius:50%;width:58px;height:58px;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:var(--shadow-sm);border:3px solid var(--sky)">🎩</div>
-        <div style="font-size:10px;color:var(--sky);font-weight:700;margin-top:4px">Equipped</div>
+    <div class="avatar-unlock-scroll">
+      <div class="unlock-item">
+        <div class="unlock-circle equipped">🎩</div>
+        <div class="unlock-label">Equipped</div>
       </div>
-      <div style="flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="font-size:36px;background:var(--card);border-radius:50%;width:58px;height:58px;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:var(--shadow-sm)">🦋</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:4px">Wings</div>
+      <div class="unlock-item">
+        <div class="unlock-circle">🦋</div>
+        <div class="unlock-label">Wings</div>
       </div>
-      <div style="flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="font-size:36px;background:#F0F0F7;border-radius:50%;width:58px;height:58px;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:var(--shadow-sm);opacity:.4">👑</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:4px">🔒 50 ⭐</div>
+      <div class="unlock-item">
+        <div class="unlock-circle locked">👑</div>
+        <div class="unlock-label">🔒 50⭐</div>
       </div>
-      <div style="flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="font-size:36px;background:#F0F0F7;border-radius:50%;width:58px;height:58px;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:var(--shadow-sm);opacity:.4">🌈</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:4px">🔒 100 ⭐</div>
+      <div class="unlock-item">
+        <div class="unlock-circle locked">🌈</div>
+        <div class="unlock-label">🔒 100⭐</div>
+      </div>
+      <div class="unlock-item">
+        <div class="unlock-circle locked">🚀</div>
+        <div class="unlock-label">🔒 200⭐</div>
       </div>
     </div>
 
-    <div class="lang-section" style="margin-top:14px">
+    <div class="lang-section">
       <h3>Language</h3>
       <div class="lang-pills">
         <div class="lang-pill active" onclick="pickLang(this)">🇬🇧 English</div>
-        <div class="lang-pill phase2" title="Coming Phase 2">🇮🇳 Hindi</div>
-        <div class="lang-pill phase2" title="Coming Phase 2">🇪🇸 Español</div>
-        <div class="lang-pill phase2" title="Coming Phase 2">🇸🇦 عربي</div>
-        <div class="lang-pill phase2" title="Coming Phase 2">🇨🇳 中文</div>
+        <div class="lang-pill p2"    onclick="pickLang(this)">🇮🇳 Hindi</div>
+        <div class="lang-pill p2"    onclick="pickLang(this)">🇪🇸 Español</div>
+        <div class="lang-pill p2"    onclick="pickLang(this)">🇸🇦 عربي</div>
+        <div class="lang-pill p2"    onclick="pickLang(this)">🇨🇳 中文</div>
       </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px">More languages coming in Phase 2!</p>
+      <p style="font-size:10px;color:rgba(255,255,255,.35);margin-top:8px;font-weight:700">More languages arriving in Phase 2!</p>
     </div>
   </div>
 
-  <!-- ── BOTTOM NAV ─────────────────────────────────────── -->
+  <!-- ══ BOTTOM NAV ══════════════════════════════════════════ -->
   <div id="nav">
-    <button class="nav-btn active" id="nav-home"    onclick="go('home')">
-      <span class="icon">🏠</span>Home
-    </button>
-    <button class="nav-btn"        id="nav-categories" onclick="go('categories')">
-      <span class="icon">📚</span>Explore
-    </button>
-    <button class="nav-btn"        id="nav-quiz"    onclick="go('quiz'); resetQuiz()">
-      <span class="icon">🧩</span>Quiz
-    </button>
-    <button class="nav-btn"        id="nav-parent"  onclick="go('parent')">
-      <span class="icon">👨‍👩‍👧</span>Parents
-    </button>
-    <button class="nav-btn"        id="nav-profile" onclick="go('profile')">
-      <span class="icon">🦊</span>Me
-    </button>
+    <button class="nav-btn active" id="nav-home"    onclick="go('home')">  <span class="icon">🏠</span>Home</button>
+    <button class="nav-btn"        id="nav-home2"   onclick="go('home')" style="display:none"></button>
+    <button class="nav-btn"        id="nav-quiz"    onclick="go('quiz'); resetQuiz()"><span class="icon">🧩</span>Quiz</button>
+    <button class="nav-btn"        id="nav-parent"  onclick="go('parent')"><span class="icon">👨‍👩‍👧</span>Parents</button>
+    <button class="nav-btn"        id="nav-profile" onclick="go('profile')"><span class="icon">🦊</span>Me</button>
   </div>
 
   <div id="toast"></div>
 </div>
 
 <script>
-/* ── NAVIGATION ──────────────────────────────────────────── */
-const NAV_MAP = {
-  home:'home', qa:'home', quiz:'quiz', result:'quiz',
-  parent:'parent', profile:'profile', categories:'categories'
-};
+/* ── NAV ─────────────────────────────────────────────────── */
+const NAV_SCREENS = { home:'home', qa:'home', quiz:'quiz', result:'quiz', parent:'parent', profile:'profile' };
 
-function go(screenId) {
+function go(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById('screen-' + screenId);
-  if (el) el.classList.add('active');
-
-  // nav highlight
+  (document.getElementById('screen-'+id)||{}).classList?.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const navKey = NAV_MAP[screenId] || screenId;
-  const navBtn = document.getElementById('nav-' + navKey);
-  if (navBtn) navBtn.classList.add('active');
-
-  // side-effects
-  if (screenId === 'parent') buildChart();
+  const nk = NAV_SCREENS[id] || id;
+  (document.getElementById('nav-'+nk)||{}).classList?.add('active');
+  if (id === 'parent') buildChart();
+  if (id === 'home')   buildStars();
 }
 
-/* ── SEARCH ──────────────────────────────────────────────── */
-function onSearch(v) {
-  document.getElementById('suggestDrop').classList.toggle('open', v.length > 0);
-}
-function showSuggest() {
-  if (document.getElementById('searchInput').value.length > 0)
-    document.getElementById('suggestDrop').classList.add('open');
-}
-function hideSuggest() {
-  setTimeout(() => document.getElementById('suggestDrop').classList.remove('open'), 150);
-}
-function pickSuggest(text) {
-  document.getElementById('searchInput').value = text;
-  document.getElementById('suggestDrop').classList.remove('open');
-  go('qa');
-  loadQuestion(text);
-}
-
-/* ── Q&A QUESTIONS ───────────────────────────────────────── */
-const QUESTIONS = [
-  {
-    q: 'Why do astronauts float in space?',
-    a: 'Astronauts float because they are in free fall! Their spacecraft orbits Earth by constantly falling toward it while also moving sideways fast enough to keep missing it. This weightless feeling is called <strong>microgravity</strong>.',
-    emoji: '🧑‍🚀', bg: 'linear-gradient(135deg,#E8EAF6,#C5CAE9)',
-    cat: '🚀 Space', diff: 'advanced',
-    facts: ['Astronauts grow up to 5 cm taller in space because the spine stretches without gravity.','Water floats as blobs in space — astronauts drink from sealed bags!']
-  },
-  {
-    q: 'Why do cats purr?',
-    a: 'Cats purr by rapidly moving their larynx muscles while breathing. It can mean they are happy, but cats also purr to calm themselves when scared or unwell — like a self-soothing <strong>superpower</strong>!',
-    emoji: '🐱', bg: 'linear-gradient(135deg,#FFF3E0,#FFE0B2)',
-    cat: '🦉 Animals', diff: 'simple',
-    facts: ["A cat's purr vibrates between 25 and 150 Hz — the same range that can heal bones!",'Big cats like tigers can roar but cannot purr continuously like house cats.']
-  },
-  {
-    q: 'Why is the sky blue?',
-    a: 'Sunlight contains all colours mixed together. When it enters our atmosphere, air molecules scatter <strong>blue light</strong> in all directions more than other colours — so we see blue everywhere we look up!',
-    emoji: '🌤️', bg: 'linear-gradient(135deg,#E3F2FD,#BBDEFB)',
-    cat: '🌿 Earth & Nature', diff: 'simple',
-    facts: ['The sky on Mars is pinkish-red because of dust in its atmosphere.','At sunset, blue light scatters away leaving red and orange — that is why sunsets are colourful!']
-  },
-  {
-    q: 'Why do elephants have big ears?',
-    a: 'Elephants use their enormous ears like fans and radiators. Blood flows through the thin skin, cools down in the air, and goes back into their body — a built-in <strong>air conditioner</strong>!',
-    emoji: '🐘', bg: 'linear-gradient(135deg,#F3E5F5,#E1BEE7)',
-    cat: '🦉 Animals', diff: 'medium',
-    facts: ['African elephants have bigger ears than Asian elephants because Africa is hotter.','Elephants can hear sounds through their feet using vibrations.']
-  },
-  {
-    q: 'Why do stars twinkle?',
-    a: 'Stars actually shine steadily — but their light passes through layers of <strong>moving air</strong> in Earth\'s atmosphere. The air bends the light every second, making stars appear to twinkle.',
-    emoji: '⭐', bg: 'linear-gradient(135deg,#1A1A2E,#2D2B55)',
-    cat: '🚀 Space', diff: 'medium',
-    facts: ['Planets do not twinkle as much as stars because they appear bigger and steadier.','Stars in space do not twinkle — only from Earth\'s surface!']
+/* ── STAR FIELD ─────────────────────────────────────────── */
+function buildStars() {
+  const field = document.getElementById('starField');
+  if (!field || field.children.length) return;
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement('div');
+    s.className = 'cover-star';
+    const sz = Math.random() * 3 + 1;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*2}s;animation-duration:${1.5+Math.random()*2}s`;
+    field.appendChild(s);
   }
+}
+buildStars();
+
+/* ── SEARCH ─────────────────────────────────────────────── */
+function onSearch(v) { document.getElementById('sugDrop').classList.toggle('open', v.length > 0); }
+function showSug()   { if (document.getElementById('searchInput').value) document.getElementById('sugDrop').classList.add('open'); }
+function hideSug()   { setTimeout(() => document.getElementById('sugDrop').classList.remove('open'), 150); }
+function pickSug(t)  { document.getElementById('searchInput').value = t; document.getElementById('sugDrop').classList.remove('open'); loadQByText(t); go('qa'); }
+
+/* ── Q&A DATA ───────────────────────────────────────────── */
+const QS = [
+  { q:'Why do astronauts float in space?',
+    short:'astronauts float in space',
+    cat:'🚀 Space', diff:'advanced',
+    emoji:'🧑‍🚀', bg:'linear-gradient(135deg,#E8EAF6,#C5CAE9)',
+    ans:'Astronauts float because they are in <span class="hl-green">free fall</span>! Their spacecraft orbits Earth by constantly falling toward it while also moving sideways fast enough to keep missing it. This weightless feeling is called <span class="hl-yellow">microgravity</span>.',
+    facts:["Astronauts grow up to 5 cm taller in space — the spine stretches without gravity!","Water floats as blobs in space. Astronauts drink from sealed bags."] },
+  { q:'Why do cats purr?',
+    short:'cats purr',
+    cat:'🦉 Animals', diff:'simple',
+    emoji:'🐱', bg:'linear-gradient(135deg,#FFF3E0,#FFE0B2)',
+    ans:'Cats purr by rapidly moving their <span class="hl-orange">larynx muscles</span> while breathing. It can mean happiness, but cats also purr to <span class="hl-green">calm themselves</span> when scared or unwell — like a self-soothing superpower!',
+    facts:["A cat's purr vibrates between 25–150 Hz — the same range that can heal bones!","Big cats like tigers can roar but cannot purr continuously."] },
+  { q:'Why is the sky blue?',
+    short:'the sky is blue',
+    cat:'🌿 Earth', diff:'simple',
+    emoji:'🌤️', bg:'linear-gradient(135deg,#E3F2FD,#BBDEFB)',
+    ans:'Sunlight contains all colours mixed together. When it enters Earth\'s atmosphere, air molecules scatter <span class="hl-yellow">blue light</span> in all directions more than other colours — so we see blue everywhere we look up!',
+    facts:["The sky on Mars is pinkish-red because of dust in its thin atmosphere.","At sunset, blue scatters away leaving red and orange — that's why sunsets are so colourful!"] },
+  { q:'Why do sunflowers turn toward the Sun?',
+    short:'sunflowers turn toward the Sun',
+    cat:'🌱 Plants', diff:'medium',
+    emoji:'🌻', bg:'linear-gradient(135deg,#FFF9E6,#FFF3B0)',
+    ans:'Young sunflowers have a plant hormone called <span class="hl-orange">auxin</span>. Auxin avoids sunlight and collects on the shaded side of the stem. That side grows <span class="hl-green">faster</span>, bending the flower toward the Sun. This is called <span class="hl-yellow">phototropism</span>.',
+    facts:["Mature sunflowers stop moving and permanently face east to warm visiting bees!","Sunflower seed spirals always follow Fibonacci numbers (21 & 34, or 34 & 55)."] },
+  { q:'Why do we yawn?',
+    short:'we yawn',
+    cat:'🤖 Body', diff:'simple',
+    emoji:'🥱', bg:'linear-gradient(135deg,#FCE4EC,#F8BBD0)',
+    ans:'Yawning may <span class="hl-green">cool your brain</span>! When you are tired, your brain temperature rises slightly. Opening your mouth wide brings in cool air that cools the blood going to the brain — like opening a window on a hot day. Yawning is also <span class="hl-yellow">contagious</span> because our brains are wired for empathy.',
+    facts:["Even reading the word 'yawn' can trigger a yawn — try not to!","Fetuses yawn in the womb from as early as 11 weeks."] },
+  { q:'Why does bread rise when baked?',
+    short:'bread rises when baked',
+    cat:'💡 Science', diff:'medium',
+    emoji:'🍞', bg:'linear-gradient(135deg,#FFFDE7,#FFF9C4)',
+    ans:'Bread dough contains <span class="hl-orange">yeast</span> — tiny living fungi. Yeast eats the sugars in flour and releases <span class="hl-green">carbon dioxide gas</span>. The stretchy gluten traps these gas bubbles, making the dough puff up. Heat in the oven sets the structure permanently so bread stays fluffy.',
+    facts:["Some sourdough starters are over 100 years old — they use wild yeast caught from the air!","The holes in bread are exactly the pockets left by yeast bubbles."] },
 ];
 
-let currentQ = 0;
-
-function loadQuestion(text) {
-  const match = QUESTIONS.find(q => q.q === text) || QUESTIONS[currentQ];
-  renderQ(QUESTIONS.indexOf(match) >= 0 ? QUESTIONS.indexOf(match) : currentQ);
-}
-
-function renderQ(idx) {
-  const q = QUESTIONS[idx];
-  document.getElementById('qaText').innerHTML = q.q;
-  document.getElementById('answerText').innerHTML = q.a;
+let qi = 0;
+function renderQ(i) {
+  const q = QS[i];
+  document.getElementById('qaCat').textContent      = q.cat;
+  const dp = document.getElementById('qaDiff');
+  dp.textContent  = q.diff.charAt(0).toUpperCase() + q.diff.slice(1);
+  dp.className    = 'diff-pill ' + q.diff;
   document.getElementById('illustEmoji').textContent = q.emoji;
   document.getElementById('illustBg').style.background = q.bg;
-  document.querySelector('.qa-header .cat-tag').textContent = q.cat;
-  const diffEl = document.getElementById('diffTag');
-  diffEl.textContent = q.diff.charAt(0).toUpperCase() + q.diff.slice(1);
-  diffEl.className = 'diff-tag ' + q.diff;
-
-  // facts
-  const ff = document.getElementById('funFacts');
-  ff.innerHTML = '<h3>✨ Fun Facts</h3>' +
-    q.facts.map(f => `<div class="fun-fact-item">${f}</div>`).join('');
-
-  // reset reveal state
-  document.getElementById('answerCard').classList.remove('shown');
-  document.getElementById('funFacts').style.display = 'none';
+  document.getElementById('qaShortText').innerHTML   = q.short + ' <span class="q-mark">?</span>';
+  document.getElementById('ansBody').innerHTML       = q.ans;
+  document.getElementById('ffItems').innerHTML       = q.facts.map(f=>`<div class="ff-item">${f}</div>`).join('');
+  // reset
+  document.getElementById('ansBlock').classList.remove('shown');
+  document.getElementById('ffBlock').classList.remove('shown');
   document.getElementById('revealBtn').style.display = 'flex';
-  document.getElementById('revealBtn').textContent = '✨ Tap to reveal the answer!';
   document.querySelector('.btn-fav').textContent = '🤍';
 }
-
-function revealAnswer() {
-  document.getElementById('answerCard').classList.add('shown');
-  document.getElementById('funFacts').style.display = 'block';
+function loadQByText(t) { const i = QS.findIndex(q=>q.q===t); if(i>=0){qi=i; renderQ(qi);} }
+function revealAns() {
+  document.getElementById('ansBlock').classList.add('shown');
+  document.getElementById('ffBlock').classList.add('shown');
   document.getElementById('revealBtn').style.display = 'none';
 }
-
-function nextQuestion() {
-  currentQ = (currentQ + 1) % QUESTIONS.length;
-  renderQ(currentQ);
-  showToast('🌟 Next Why loaded!');
+function nextQ() { qi = (qi+1)%QS.length; renderQ(qi); showToast('📖 Next Why loaded!'); }
+function toggleFav(b) { const on=b.textContent==='❤️'; b.textContent=on?'🤍':'❤️'; showToast(on?'Removed from Favorites':'❤️ Added to Favorites!'); }
+function playAudio() { const b=document.getElementById('audioBtn'); b.textContent='⏸'; showToast('🔊 Playing narration…'); setTimeout(()=>b.textContent='🔊',2000); }
+function goQA(cat,mascot,emoji,diff) {
+  document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  setTimeout(()=>{ go('qa'); },180);
 }
+renderQ(0);
 
-function toggleFav(btn) {
-  const on = btn.textContent === '❤️';
-  btn.textContent = on ? '🤍' : '❤️';
-  showToast(on ? 'Removed from Favorites' : '❤️ Added to Favorites!');
-}
-
-function playAudio() {
-  const btn = document.getElementById('audioBtn');
-  btn.textContent = '⏸';
-  showToast('🔊 Narration playing…');
-  setTimeout(() => { btn.textContent = '🔊'; }, 2000);
-}
-
-function selectCat(el, name) {
-  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  setTimeout(() => go('qa'), 180);
-}
-
-/* ── QUIZ ────────────────────────────────────────────────── */
-const QUIZ_QS = [
-  { q: 'Why is there no sound in space?',
-    opts: ['Space is too cold','Space has no air particles','Sound travels too slowly','Helmets block sound'],
-    correct: 1,
-    fb: 'Sound needs particles to travel through — space is nearly empty!' },
-  { q: 'What does microgravity mean?',
-    opts: ['Very small gravity','No gravity at all','Astronauts are weightless in free fall','Gravity in space is micro-sized'],
-    correct: 2,
-    fb: 'Microgravity is the weightlessness felt during free fall orbit around Earth.' },
-  { q: 'Why do cats purr even when scared?',
-    opts: ['To scare predators away','As a self-soothing superpower','To communicate hunger','To attract mates'],
-    correct: 1,
-    fb: 'Purring vibrates at healing frequencies and helps cats calm themselves!' },
-  { q: 'Why does blue light scatter more than red light?',
-    opts: ['Blue has more energy and shorter wavelength','Red travels faster','Blue is heavier','Red absorbs water'],
-    correct: 0,
-    fb: 'Shorter wavelengths (blue) scatter more off air molecules — Rayleigh scattering!' },
-  { q: 'How do elephant ears help them stay cool?',
-    opts: ['They fan air with them','Blood cools as it flows through thin ear skin','They dip them in water','Ears block sun'],
-    correct: 1,
-    fb: 'Blood vessels in the thin ears radiate heat — a natural radiator!' }
+/* ── QUIZ DATA ──────────────────────────────────────────── */
+const QUIZ = [
+  { q:'Why is there no sound in space?',
+    opts:['Space is too cold for sound','No air particles to carry vibrations','Sound travels but too slowly','Astronaut helmets block all sound'],
+    c:1, fb:'Sound needs particles to travel through — space is nearly empty!' },
+  { q:'What is the correct name for weightlessness felt in orbit?',
+    opts:['Zero gravity','Anti-gravity','Microgravity','Outer gravity'],
+    c:2, fb:'Microgravity is the feeling of weightlessness during free-fall orbit.' },
+  { q:'Why do cats also purr when scared?',
+    opts:['To scare predators away','As a self-soothing superpower','To signal hunger','To attract mates'],
+    c:1, fb:'Purring at healing frequencies helps cats calm themselves in stressful moments!' },
+  { q:'What plant hormone causes sunflowers to track the Sun?',
+    opts:['Ethylene','Auxin','Cytokinin','Gibberellin'],
+    c:1, fb:'Auxin accumulates on the shaded side and makes it grow faster, bending the stem.' },
+  { q:'Why does bread have holes?',
+    opts:['Air beaten in by mixing','Gaps left by yeast CO₂ bubbles','Steam from water in flour','Holes punched before baking'],
+    c:1, fb:'Yeast eats sugars and releases CO₂ gas — gluten traps the bubbles making bread fluffy!' },
 ];
-
-let quizIdx = 0;
-let quizScore = 0;
-let quizAnswered = false;
-
-function resetQuiz() {
-  quizIdx = 0; quizScore = 0; quizAnswered = false;
-  renderQuizQ();
-}
-
+let qzIdx=0, qzScore=0, qzAnswered=false;
+function resetQuiz() { qzIdx=0; qzScore=0; qzAnswered=false; renderQuizQ(); }
 function renderQuizQ() {
-  const q = QUIZ_QS[quizIdx];
-  document.getElementById('quizQ').textContent = q.q;
-  document.getElementById('quizCount').textContent = `${quizIdx + 1} / ${QUIZ_QS.length}`;
-  document.getElementById('quizProgress').style.width = `${((quizIdx + 1) / QUIZ_QS.length) * 100}%`;
-
-  const opts = document.getElementById('quizOptions');
-  opts.innerHTML = q.opts.map((o, i) =>
-    `<div class="quiz-option" onclick="pickOption(this,${i === q.correct})">${o}</div>`
-  ).join('');
-
-  const fb = document.getElementById('quizFeedback');
-  fb.className = 'quiz-feedback';
-  fb.textContent = '';
-  document.getElementById('quizNextBtn').className = 'quiz-next-btn';
-  quizAnswered = false;
+  const q = QUIZ[qzIdx];
+  document.getElementById('quizQText').textContent     = q.q;
+  document.getElementById('quizCountLbl').textContent  = `${qzIdx+1} / ${QUIZ.length}`;
+  document.getElementById('quizProg').style.width      = `${((qzIdx+1)/QUIZ.length)*100}%`;
+  document.getElementById('quizOpts').innerHTML = q.opts.map((o,i)=>
+    `<div class="quiz-opt" onclick="pickOpt(this,${i===q.c})">${o}</div>`).join('');
+  document.getElementById('quizFb').className='quiz-fb';
+  document.getElementById('quizFb').textContent='';
+  document.getElementById('quizNextBtn').className='quiz-next';
+  qzAnswered=false;
 }
-
-function pickOption(el, correct) {
-  if (quizAnswered) return;
-  quizAnswered = true;
-
-  document.querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
-  el.classList.add(correct ? 'correct' : 'wrong');
-
-  if (!correct) {
-    // highlight the right one
-    const q = QUIZ_QS[quizIdx];
-    document.querySelectorAll('.quiz-option')[q.correct].classList.add('correct');
-  } else {
-    quizScore++;
-  }
-
-  const fb = document.getElementById('quizFeedback');
-  fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'ko');
-  fb.textContent = (correct ? '✅ Correct! ' : '❌ Not quite! ') + QUIZ_QS[quizIdx].fb;
-
-  document.getElementById('quizNextBtn').className = 'quiz-next-btn show';
+function pickOpt(el, correct) {
+  if(qzAnswered) return;
+  qzAnswered=true;
+  document.querySelectorAll('.quiz-opt').forEach(o=>o.style.pointerEvents='none');
+  el.classList.add(correct?'correct':'wrong');
+  if(!correct) document.querySelectorAll('.quiz-opt')[QUIZ[qzIdx].c].classList.add('correct');
+  else qzScore++;
+  const fb=document.getElementById('quizFb');
+  fb.className='quiz-fb show '+(correct?'ok':'ko');
+  fb.textContent=(correct?'✅ Correct! ':'❌ Not quite! ')+QUIZ[qzIdx].fb;
+  document.getElementById('quizNextBtn').className='quiz-next show';
 }
-
 function nextQuizQ() {
-  quizIdx++;
-  if (quizIdx >= QUIZ_QS.length) {
-    showResult();
-  } else {
-    renderQuizQ();
-  }
+  if(++qzIdx >= QUIZ.length) showResult();
+  else renderQuizQ();
 }
-
 function showResult() {
-  const pct = (quizScore / QUIZ_QS.length) * 100;
-  const stars = pct >= 90 ? '⭐⭐⭐' : pct >= 70 ? '⭐⭐' : pct >= 60 ? '⭐' : '🌱';
-  const title  = pct >= 90 ? 'Brilliant! 🎉' : pct >= 70 ? 'Well done! 👏' : pct >= 60 ? 'Good try! 💪' : 'Keep exploring! 🌱';
-  document.getElementById('resultStars').textContent = stars;
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultScore').textContent = `You got ${quizScore}/${QUIZ_QS.length} correct!`;
+  const pct=(qzScore/QUIZ.length)*100;
+  document.getElementById('rStars').textContent = pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':pct>=60?'⭐':'🌱';
+  document.getElementById('rTitle').textContent = pct>=90?'Brilliant!':pct>=70?'Well done!':pct>=60?'Good try!':'Keep exploring!';
+  document.getElementById('rScore').textContent = `You got ${qzScore} / ${QUIZ.length} correct!`;
   go('result');
 }
-
-/* ── PARENT CHART ────────────────────────────────────────── */
-function buildChart() {
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const mins  = [18, 32, 0, 24, 40, 38, 22];
-  const max   = Math.max(...mins);
-  const wrap  = document.getElementById('chartBars');
-  wrap.innerHTML = days.map((d, i) => `
-    <div class="chart-bar-wrap">
-      <div class="chart-bar ${i === 4 ? 'active' : ''}"
-           style="height:${max ? (mins[i]/max)*70 : 4}px" title="${mins[i]} min"></div>
-      <span class="chart-day">${d}</span>
-    </div>
-  `).join('');
-}
-
-/* ── LANGUAGE ────────────────────────────────────────────── */
-function pickLang(el) {
-  if (el.classList.contains('phase2')) {
-    showToast('🌍 Coming in Phase 2!'); return;
-  }
-  document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  showToast('Language updated!');
-}
-
-/* ── TOAST ───────────────────────────────────────────────── */
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2200);
-}
-
-/* ── INIT ────────────────────────────────────────────────── */
-renderQ(0);
 resetQuiz();
+
+/* ── CHART ──────────────────────────────────────────────── */
+function buildChart() {
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], mins=[18,32,0,24,40,38,22];
+  const max=Math.max(...mins);
+  document.getElementById('chartBars').innerHTML=days.map((d,i)=>`
+    <div class="bar-col">
+      <div class="bar-fill ${i===4?'today':''}" style="height:${max?(mins[i]/max)*70:4}px" title="${mins[i]} min"></div>
+      <span class="bar-day">${d}</span>
+    </div>`).join('');
+}
+
+/* ── LANGUAGE ───────────────────────────────────────────── */
+function pickLang(el) {
+  if(el.classList.contains('p2')) { showToast('🌍 Coming in Phase 2!'); return; }
+  document.querySelectorAll('.lang-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active'); showToast('Language updated!');
+}
+
+/* ── TOAST ──────────────────────────────────────────────── */
+let tt;
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  clearTimeout(tt); tt=setTimeout(()=>t.style.display='none', 2200);
+}
 </script>
 </body>
 </html>
