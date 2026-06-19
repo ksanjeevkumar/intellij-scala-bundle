@@ -2,3 +2,6 @@
 /target/
 /project/target/
 mac-host.properties
+/node_modules/
+/package.json
+/package-lock.json
